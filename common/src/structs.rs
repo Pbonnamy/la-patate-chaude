@@ -113,7 +113,7 @@ pub trait ChallengeTrait {
 
     fn name() -> String;
 
-    fn new(input: String) ->   Self;
+    fn new(input: String) -> Self;
 
     fn solve(&self) -> Self::Output;
 

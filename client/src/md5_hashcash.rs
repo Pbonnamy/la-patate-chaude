@@ -1,5 +1,3 @@
-mod hashCashStruct;
-
 use common::structs::{MD5HashCashInput, MD5HashCashOutput, ChallengeTrait};
 use md5::{Md5, Digest};
 
@@ -18,7 +16,9 @@ impl Challenge for HashCash {
         String::from("HashCash")
     }
 
-    fn new(input: Input) -> Self {todo!()}
+    fn new(input: Input) -> Self {
+        todo!()
+    }
 
     fn solve(&self) -> Self::Output {
         todo!()

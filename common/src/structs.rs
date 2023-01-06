@@ -106,6 +106,20 @@ pub enum ChallengeAnswer {
     RecoverSecret(RecoverSecretOutput),
 }
 
+pub trait ChallengeTrait {
+    type Input;
+
+    type Output;
+
+    fn name() -> String;
+
+    fn new(input: String) ->   Self;
+
+    fn solve(&self) -> Self::Output;
+
+    fn verify(&self, answer: &Self::Output) -> bool;
+}
+
 // MD5HashCash
 #[derive(Serialize, Deserialize, Debug)]
 pub struct MD5HashCashInput {

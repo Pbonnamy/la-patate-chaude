@@ -1,3 +1,6 @@
+mod md5_hashcash;
+mod recover_secret;
+
 use std::net::TcpStream;
 use common::request;
 use common::structs::{ Message, Subscribe };

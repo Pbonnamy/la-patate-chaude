@@ -6,7 +6,7 @@ struct HashCash{
     output: MD5HashCashOutput
 }
 
-impl Challenge for HashCash {
+impl ChallengeTrait for HashCash {
 
     type Input = MD5HashCashInput;
     
@@ -16,7 +16,7 @@ impl Challenge for HashCash {
         String::from("HashCash")
     }
 
-    fn new(input: Input) -> Self {
+    fn new(input: Self::Input) -> Self {
         todo!()
     }
 

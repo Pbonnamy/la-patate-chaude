@@ -14,7 +14,7 @@ impl ChallengeTrait for RecoverSecret {
         String::from("RecoverSecret")
     }
 
-    fn new(input: Input) -> Self {
+    fn new(input: Self::Input) -> Self {
         todo!()
     }
 

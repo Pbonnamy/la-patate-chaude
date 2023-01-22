@@ -1,11 +1,11 @@
 use common::structs::{MD5HashCashInput, MD5HashCashOutput, ChallengeTrait};
 
-struct HashCash{
+pub struct MD5HashCash {
     _input: MD5HashCashInput,
     _output: MD5HashCashOutput
 }
 
-impl ChallengeTrait for HashCash {
+impl ChallengeTrait for MD5HashCash {
 
     type Input = MD5HashCashInput;
     

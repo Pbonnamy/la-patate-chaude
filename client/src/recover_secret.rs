@@ -1,6 +1,6 @@
 use common::structs::{RecoverSecretInput, RecoverSecretOutput, ChallengeTrait};
 
-struct RecoverSecret {
+pub struct RecoverSecret {
     _input: RecoverSecretInput,
     _output: RecoverSecretOutput
 }

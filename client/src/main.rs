@@ -3,7 +3,7 @@ mod recover_secret;
 
 use std::net::TcpStream;
 use common::request;
-use common::structs::{ Message, Subscribe, Challenge, ChallengeTrait };
+use common::structs::{ Message, Subscribe, Challenge, ChallengeTrait, ChallengeResult, ChallengeAnswer };
 use md5_hashcash::MD5HashCash;
 use recover_secret::RecoverSecret;
 
@@ -31,12 +31,26 @@ fn main() {
                     Challenge::MD5HashCash(input) => {
                         let challenge = MD5HashCash::new(input);
 
-                        let _output = challenge.solve();
+                        let output = challenge.solve();
+
+                        let result = Message::ChallengeResult(ChallengeResult {
+                            answer: ChallengeAnswer::MD5HashCash(output),
+                            next_target: get_next_target()
+                        });
+
+                        request::send_message(&mut stream, result);
                     },
                     Challenge::RecoverSecret(input) => {
                         let challenge = RecoverSecret::new(input);
 
-                        let _output = challenge.solve();
+                        let output = challenge.solve();
+
+                        let result = Message::ChallengeResult(ChallengeResult {
+                            answer: ChallengeAnswer::RecoverSecret(output),
+                            next_target: get_next_target()
+                        });
+
+                        request::send_message(&mut stream, result);
                     }
                 }
             },
@@ -54,4 +68,8 @@ fn main() {
             }
         }
     }
+}
+
+fn get_next_target() -> String {
+    todo!()
 }

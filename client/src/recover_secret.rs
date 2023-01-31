@@ -1,8 +1,8 @@
 use common::structs::{RecoverSecretInput, RecoverSecretOutput, ChallengeTrait};
 
-struct RecoverSecret {
-    input: RecoverSecretInput,
-    output: RecoverSecretOutput
+pub struct RecoverSecret {
+    _input: RecoverSecretInput,
+    _output: RecoverSecretOutput
 }
 
 impl ChallengeTrait for RecoverSecret {
@@ -14,7 +14,7 @@ impl ChallengeTrait for RecoverSecret {
         String::from("RecoverSecret")
     }
 
-    fn new(input: Input) -> Self {
+    fn new(_input: Self::Input) -> Self {
         todo!()
     }
 
@@ -22,7 +22,7 @@ impl ChallengeTrait for RecoverSecret {
         todo!()
     }
 
-    fn verify(&self, answer: &Self::Output) -> bool {
+    fn verify(&self, _output: &Self::Output) -> bool {
         todo!()
     }
 }

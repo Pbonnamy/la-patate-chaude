@@ -1,12 +1,11 @@
 use common::structs::{MD5HashCashInput, MD5HashCashOutput, ChallengeTrait};
-use md5::{Md5, Digest};
 
-struct HashCash{
-    input: MD5HashCashInput,
-    output: MD5HashCashOutput
+pub struct MD5HashCash {
+    _input: MD5HashCashInput,
+    _output: MD5HashCashOutput
 }
 
-impl Challenge for HashCash {
+impl ChallengeTrait for MD5HashCash {
 
     type Input = MD5HashCashInput;
     
@@ -16,7 +15,7 @@ impl Challenge for HashCash {
         String::from("HashCash")
     }
 
-    fn new(input: Input) -> Self {
+    fn new(_input: Self::Input) -> Self {
         todo!()
     }
 
@@ -24,7 +23,7 @@ impl Challenge for HashCash {
         todo!()
     }
 
-    fn verify(&self, answer: &Self::Output) -> bool {
+    fn verify(&self, _output: &Self::Output) -> bool {
         todo!()
     }
 }

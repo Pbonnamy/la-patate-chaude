@@ -1,3 +1,4 @@
+use std::ptr::null;
 use md5::digest::Output;
 use md5::Md5;
 use common::structs::{MD5HashCashInput, MD5HashCashOutput, ChallengeTrait};
@@ -46,28 +47,27 @@ impl ChallengeTrait for MD5HashCash {
     }
 
     fn new(_input: Self::Input) -> Self {
-        let mut hex_seed = String::new();
-        let seed: u64 = 0;
-        write!(&mut hex_seed, "{:016x}", seed).expect("Erreur à la conversion du seed en hexa");
-        let hash = hash(&(hex_seed + &*_input.message));
+        MD5HashCash{ _input, _output: Null }
     }
 
     fn solve(&self) -> Self::Output {
         let seed: u64 = 0;
         write!(&mut hex_seed, "{:016x}", seed).expect("Erreur à la conversion du seed en hexa");
         let hash = hash(&(hex_seed + &*_input.message));
-        let bits_to_zero = count_bits_zero(&hash);
+        let mut bits_to_zero = count_bits_zero(&hash);
         let _input: MD5HashCashInput = Self::Input;
-        if bits_to_zero >= _input.complexity as u64 {
-            &self._output.seed = &seed;
-            &self._output.hashcode = &hash;
+        while bits_to_zero < _input.complexity as u64 {
+            bits_to_zero = count_bits_zero(&hash);
         }
+        &self._output.seed = &seed;
+        &self._output.hashcode = &hash;
         Self::Output = &self._output;
         return Output
-
     }
 
     fn verify(&self, _output: &Self::Output) -> bool {
-        todo!()
+        return if &self._output == _output {
+            true
+        } else { false }
     }
 }

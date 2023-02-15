@@ -35,16 +35,16 @@ fn main() {
     //     tuple_sizes : vec![3,3,7]
     // };
      let recover_input = RecoverSecretInput {
-         word_count : 2,
-         letters : "lvlle".to_string(),
-         tuple_sizes : vec![3,2]
+         word_count : 1,
+         letters : "WvyOAlxafUzleiSOl9xayBeHTmy9xWTU5lMW4nUO5lMWRajn2BiHSRUzy5afnUz5wlexWrm5wlBWr4mAlBrUmzHxTUzwlHrfTwBeSRmzlMSRfoUOAe9S4oUiraOiramzM5w3l".to_string(),
+         tuple_sizes : vec![6, 8, 4, 6, 4, 7, 8, 9, 6, 9, 8, 7, 5, 7, 6, 6, 9, 5, 4, 5, 4]
      };
     //let challenge_recover = recover_secret::RecoverSecret::new(recover_input);
     // let sentence = "Il fait froid" ;
     // let letters = "IfflafIl froid";
-    // let tuples = recover_secret::tuples_from_letters(letters, &[3,3,8]);
+     let tuples = tuples_from_letters(&recover_input.letters, &[6, 8, 4, 6, 4, 7, 8, 9, 6, 9, 8, 7, 5, 7, 6, 6, 9, 5, 4, 5, 4]);
     // let are_in_order : bool = recover_secret::are_tuples_in_good_order(&tuples, sentence);
-    // println!("Tuples -> {:?}", tuples);
+     println!("Tuples -> {:?}", tuples);
     // println!("Tuples in order -> {:?}", are_in_order);
     // let sentence = "C'est chou" ;
     //let are_unique : bool = recover_secret::are_random_unique_chars(sentence);

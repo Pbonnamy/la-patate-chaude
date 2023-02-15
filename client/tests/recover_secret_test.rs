@@ -1,7 +1,43 @@
-use std::collections::HashMap;
+
+/////////////////////// TESTS ///////////////////////
+
 use std::fs::File;
-use std::io::{BufRead, BufReader, Read};
-use common::structs::{*};
+use std::io::{BufRead, BufReader};
+use common::structs::{ChallengeTrait, RecoverSecretInput, RecoverSecretOutput};
+
+#[cfg(test)]
+mod tests{
+    use common::structs::RecoverSecretInput;
+    use super::*;
+
+    #[test]
+    fn test_tuples_from_letters() {
+        let letters = "abcdef";
+        let tuple_sizes = [2, 3, 1];
+        let tuples = tuples_from_letters(letters, &tuple_sizes);
+        assert_eq!(tuples, vec!["ab", "cde", "f"]);
+    }
+
+    #[test]
+    fn test_is_tuple_in_good_order() {
+        let tuple = "abe";
+        let sentence = "abcdef";
+        let is_in_order = is_tuple_in_good_order(tuple, sentence);
+        assert_eq!(is_in_order, true);
+    }
+
+    #[test]
+    fn test_sentence_with_distincts_chars() {
+        let input = RecoverSecretInput {
+            word_count: 1,
+            letters: String::from("WvyOAlxafUzleiSOl9xayBeHTmy9xWTU5lMW4nUO5lMWRajn2BiHSRUzy5afnUz5wlexWrm5wlBWr4mAlBrUmzHxTUzwlHrfTwBeSRmzlMSRfoUOAe9S4oUiraOiramzM5w3l"),
+            tuple_sizes: vec![6, 8, 4, 6, 4, 7, 8, 9, 6, 9, 8, 7, 5, 7, 6, 6, 9, 5, 4, 5, 4]
+        };
+        assert_eq!(sentence_with_distincts_chars(&input), "xWRvraj4fonTUmzyO25wA3lBeiM9H");
+    }
+}
+
+///////////////////////Function///////////////////////
 
 pub struct RecoverSecret {
     input: RecoverSecretInput,
@@ -10,7 +46,7 @@ pub struct RecoverSecret {
 
 impl ChallengeTrait for RecoverSecret {
     type Input = RecoverSecretInput;
-    
+
     type Output = RecoverSecretOutput;
 
     fn name() -> String {
@@ -156,104 +192,3 @@ pub fn secret_sentence( input: &RecoverSecretInput) -> String {
     }
     return sentence;
 }
-//-----------------------------------------
-
-
-
-
-
-
-
-
-//pub fn words_from_data(data: )
-
-/*pub fn generate_sentence_from_tuples(tuple: &str) -> String {
-    // Use word in liste-mots-alphabetique.txt
-
-
-}*/
-
-/* //Checker complexité pour voir comment on genere le complexity
-pub fn complexity_of(sentence : &str) -> u32{
-    let value : u32 ;
-
-    match(sentence) {
-        "C'est chou" => value = 0,
-        "Il fait froid" => value = 17,
-        //Superieur a 17
-        _ => value = 18,
-    }
-    //Si la phrase est uniquement faite de char, sa complexité vaut entre 1 et 16
-    if(are_random_unique_chars(sentence)){
-        //nombre aleatoire entre 1 et 16
-        return 5
-    }
-
-    return value;
-}
-pub fn are_random_unique_chars(sentence : &str) -> bool {
-    let mut are_unique = true;
-    let mut index = 0;
-    while index < sentence.len() && are_unique {
-        let mut index2 = index + 1;
-        while index2 < sentence.len() && are_unique {
-            if sentence.chars().nth(index).unwrap() == sentence.chars().nth(index2).unwrap() {
-                are_unique = false;
-            }
-            index2 += 1;
-        }
-        index += 1;
-    }
-    are_unique
-}*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-///////////////////////////////////////////TESTS///////////////////////////////////////////
-
-// pub fn recover_secret_test_complexity_0() {
-//     let input = RecoverSecretInput {
-//         word_count: 2,
-//         letters: String::from("t cCehuCethoCeschouC'schout h"),
-//         tuple_sizes: vec![3, 4, 5, 7, 7, 3]
-//     };
-//
-//     let challenge = RecoverSecret::new(input);
-//     let output = challenge.solve();
-//     let is_valid = challenge.verify(&output);
-// }
-//
-// pub fn recover_secret_test_complexity_1to16(){
-//     let input = RecoverSecretInput {
-//         word_count: 1,
-//         letters: String::from("WvyOAlxafUzleiSOl9xayBeHTmy9xWTU5lMW4nUO5lMWRajn2BiHSRUzy5afnUz5wlexWrm5wlBWr4mAlBrUmzHxTUzwlHrfTwBeSRmzlMSRfoUOAe9S4oUiraOiramzM5w3l"),
-//         tuple_sizes: vec![6, 8, 4, 6, 4, 7, 8, 9, 6, 9, 8, 7, 5, 7, 6, 6, 9, 5, 4, 5, 4]
-//     };
-//
-//     let challenge = RecoverSecret::new(input);
-//     let output = challenge.solve();
-//     let is_valid = challenge.verify(&output);
-// }
-//
-// pub fn recover_secret_test_complexity_17() {
-//     let input = RecoverSecretInput {
-//         word_count: 3,
-//         letters: String::from("ifflafilfroid"),
-//         tuple_sizes: vec![3,3,7]
-//     };
-//
-//     let challenge = RecoverSecret::new(input);
-//     let output = challenge.solve();
-//     let is_valid = challenge.verify(&output);
-// }

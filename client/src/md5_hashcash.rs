@@ -16,11 +16,11 @@ fn hash(message: &str) -> String{
 }
 
 fn count_bits_zero(string: &str) -> u64{
-
+    println!("String: {}", string);
     let mut count = 0;
     let decode = hex::decode(string).expect("Erreur au decoding de la chaine");
     let binary =
-        str::from_utf8(&decode).expect("Erreur de conversion");
+        String::from_utf8_lossy(&decode);
 
     for i in binary.chars() {
         if i == '0' {
@@ -53,20 +53,20 @@ impl ChallengeTrait for MD5HashCash {
     }
 
     fn solve(&self) -> Self::Output {
-        let seed: u64 = 0;
+        let mut seed: u64 = 0;
         let mut hex_seed = String::new();
         write!(&mut hex_seed, "{:016x}", seed).expect("Erreur à la conversion du seed en hexa");
         let mut hash_code = hash(&(hex_seed + &self._input.message));
         let mut bits_to_zero = count_bits_zero(&hash_code);
-        let _input: &MD5HashCashInput = &self._input;
-        while bits_to_zero < _input.complexity as u64 {
-            let seed: u64 = seed + 1;
+        let input: &MD5HashCashInput = &self.input;
+        while bits_to_zero < input.complexity as u64 {
+            seed += 1;
             let mut hex_seed = String::new();
             write!(&mut hex_seed, "{:016x}", seed).expect("Erreur à la conversion du seed en hexa");
             hash_code = hash(&(hex_seed + &self._input.message));
             bits_to_zero = count_bits_zero(&hash_code);
         }
-        let output = MD5HashCashOutput{ seed, hashcode: hash_code };
+        let output = MD5HashCashOutput{ seed: bits_to_zero, hashcode: hash_code };
         output
         /*&self._output.unwrap().seed = output.seed;
         &self._output.unwrap().hashcode = output.hashcode.to_string();

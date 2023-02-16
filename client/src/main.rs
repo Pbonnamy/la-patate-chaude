@@ -4,26 +4,15 @@ mod recover_secret;
 use rand::{distributions::Alphanumeric, Rng};
 use std::net::TcpStream;
 use common::request;
-use common::structs::{Message, Subscribe, Challenge, ChallengeTrait, ChallengeResult, ChallengeAnswer, MD5HashCashInput};
+use common::structs::{Message, Subscribe, Challenge, ChallengeTrait, ChallengeResult, ChallengeAnswer};
 use md5_hashcash::MD5HashCash;
 use recover_secret::RecoverSecret;
 
 fn main() {
-/*    let mut stream = TcpStream::connect("127.0.0.1:7878").unwrap();
+    let mut stream = TcpStream::connect("127.0.0.1:7878").unwrap();
 
-    request::send_message(&mut stream, Message::Hello)*/;
+    request::send_message(&mut stream, Message::Hello);
 
-    let input = MD5HashCashInput {
-        message: "A red mountain breaks your boring client.".to_string(),
-        complexity: 16
-    };
-    let challenge = MD5HashCash::new(input);
-
-    let output = challenge.solve();
-
-    println!("Output: {:?}", output);
-
-/*
     loop {
         let response = request::receive_message(&mut stream);
 
@@ -81,7 +70,7 @@ fn main() {
                 panic!("Something went wrong !");
             }
         }
-    }*/
+    }
 }
 
 fn get_next_target() -> String {

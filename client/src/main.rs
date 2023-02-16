@@ -1,6 +1,7 @@
 mod md5_hashcash;
 mod recover_secret;
 
+use rand::{distributions::Alphanumeric, Rng};
 use std::net::TcpStream;
 use common::request;
 use common::structs::{ Message, Subscribe, Challenge, ChallengeTrait, ChallengeResult, ChallengeAnswer };
@@ -17,7 +18,9 @@ fn main() {
 
         match response {
             Message::Welcome(..) => {
-                let subscribe = Subscribe { name: "test".to_string() };
+                let player_name: String = rand::thread_rng().sample_iter(&Alphanumeric).take(7).map(char::from).collect();
+                
+                let subscribe = Subscribe { name: player_name };
                 request::send_message(&mut stream, Message::Subscribe(subscribe));
             },
             Message::SubscribeResult(..) => {

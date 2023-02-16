@@ -4,7 +4,7 @@ use std::io::prelude::*;
 
 pub fn send_message (stream: &mut TcpStream, msg: Message) {
     let json = serde_json::to_string(&msg).unwrap();
-    println!("DEBUG (Sended) : {:?}", json);
+    println!("\n\x1b[34mDEBUG (Sended) : {:?}\x1b[0m", json);
     let len = json.len() as u32;
     
     stream.write(&len.to_be_bytes()).unwrap();
@@ -20,7 +20,7 @@ pub fn receive_message (stream: &mut TcpStream) -> Message {
     stream.read_exact(buf.as_mut()).unwrap();
     let res = String::from_utf8_lossy(&buf);
 
-    println!("DEBUG (Received) : {:?}", res);
+    println!("\n\x1b[31mDEBUG (Received) : {:?}\x1b[0m", res);
 
     return serde_json::from_str(&res).unwrap();
 }

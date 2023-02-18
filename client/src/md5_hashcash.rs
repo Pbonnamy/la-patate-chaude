@@ -5,6 +5,7 @@ use common::structs::{MD5HashCashInput, MD5HashCashOutput, ChallengeTrait};
 
 pub struct MD5HashCash {
     input: MD5HashCashInput,
+    #[allow(dead_code)]
     output: MD5HashCashOutput
 }
 
@@ -36,7 +37,7 @@ fn count_bits_zero(string: &str) -> u64{
 
 }
 
-fn verifyHashCode(message: &str, seed: u64) -> Result<String, Error>{
+fn verify_hash_code(message: &str, seed: u64) -> Result<String, Error>{
     let seed: u64 = seed;
     let mut hex_seed = String::new();
     write!(&mut hex_seed, "{:016x}", seed).expect("Erreur à la conversion du seed en hexa");
@@ -66,7 +67,7 @@ impl ChallengeTrait for MD5HashCash {
         write!(&mut hex_seed, "{:016x}", seed).expect("Erreur à la conversion du seed en hexa");
         let mut hash_code = hash(&(hex_seed + &self.input.message));
         let mut bits_to_zero = count_bits_zero(&hash_code);
-        let input: &MD5HashCashInput = &self._input;
+        let input: &MD5HashCashInput = &self.input;
         while bits_to_zero < input.complexity as u64 {
             seed += 1;
             let mut hex_seed = String::new();
@@ -85,7 +86,7 @@ impl ChallengeTrait for MD5HashCash {
 
     fn verify(&self, output: &Self::Output) -> bool {
         let seed: u64 = output.seed;
-        return match verifyHashCode(&self.input.message, seed) {
+        return match verify_hash_code(&self.input.message, seed) {
             Ok(value) => {
                 if value == output.hashcode {
                     println!("Ok: {}", value);

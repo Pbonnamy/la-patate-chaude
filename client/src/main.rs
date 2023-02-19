@@ -76,7 +76,10 @@ fn main() {
 
 fn get_next_target(leaderboard: &PublicLeaderBoard, player_name: &String) -> String {
     
-    let random_player = leaderboard.0.iter().find(|player| player.name != *player_name).unwrap();
-
-    random_player.name.clone()
+    let random_player = leaderboard.0.iter().find(|player| player.name != *player_name);
+    
+    return match random_player {
+        Some(player) => player.name.clone(),
+        None => return String::new()
+    };
 }

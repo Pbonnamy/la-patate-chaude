@@ -40,7 +40,7 @@ pub enum SubscribeError {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-pub struct PublicLeaderBoard (Vec<PublicPlayer>);
+pub struct PublicLeaderBoard (pub Vec<PublicPlayer>);
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct PublicPlayer {

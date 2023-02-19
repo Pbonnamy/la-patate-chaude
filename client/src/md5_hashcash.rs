@@ -89,7 +89,7 @@ impl ChallengeTrait for MD5HashCash {
         return match verify_hash_code(&self.input.message, seed) {
             Ok(value) => {
                 if value == output.hashcode {
-                    println!("Ok: {}", value);
+                    // println!("Ok: {}", value);
                     true
                 } else {
                     println!("La valeur ne correspond pas: {}", value);

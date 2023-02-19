@@ -36,7 +36,7 @@ fn count_bits_zero(string: &str) -> u64{
 
 }
 
-fn verifyHashCode(message: &str, seed: u64) -> Result<String, Error>{
+fn verify_hash_code(message: &str, seed: u64) -> Result<String, Error>{
     let seed: u64 = seed;
     let mut hex_seed = String::new();
     write!(&mut hex_seed, "{:016x}", seed).expect("Erreur à la conversion du seed en hexa");
@@ -51,7 +51,6 @@ impl ChallengeTrait for MD5HashCash {
     
     type Output = MD5HashCashOutput;
 
-
     fn name() -> String {
         String::from("HashCash")
     }
@@ -65,7 +64,7 @@ impl ChallengeTrait for MD5HashCash {
         let mut hex_seed = String::new();
         write!(&mut hex_seed, "{:016x}", seed).expect("Erreur à la conversion du seed en hexa");
         let mut hex_hash = hex_seed.to_uppercase().clone();
-        let mut hash_code = hash(&(hex_seed.to_uppercase().clone() + &self._input.message));
+        let mut hash_code = hash(&(hex_hash + &self._input.message));
         let mut bits_to_zero = count_bits_zero(&hash_code);
         let input: &MD5HashCashInput = &self._input;
         while bits_to_zero < input.complexity as u64 {
@@ -73,14 +72,12 @@ impl ChallengeTrait for MD5HashCash {
             let mut hex_seed = String::new();
             write!(&mut hex_seed, "{:016x}", seed).expect("Erreur à la conversion du seed en hexa");
             hex_hash = hex_seed.to_uppercase().clone();
-            hash_code = hash(&(hex_seed.to_uppercase().clone() + &self._input.message));
+            hash_code = hash(&(hex_hash + &self._input.message));
             bits_to_zero = count_bits_zero(&hash_code);
         }
-        //println!("hash: {}", hash_code);
-        //println!("hash: {}", hex_hash);
         let output = MD5HashCashOutput{ seed, hashcode: hash_code.to_uppercase() };
-        if self.verify(&output) {
-            return output;
+        return if self.verify(&output) {
+            output
         } else {
             panic!("Erreur dans la vérification du hashcash")
         }
@@ -88,10 +85,9 @@ impl ChallengeTrait for MD5HashCash {
 
     fn verify(&self, _output: &Self::Output) -> bool {
         let seed: u64 = _output.seed;
-        return match verifyHashCode(&self._input.message, seed) {
+        return match verify_hash_code(&self._input.message, seed) {
             Ok(value) => {
                 if value == _output.hashcode {
-                    println!("Ok: {}", value);
                     true
                 } else {
                     println!("La valeur ne correspond pas: {}", value);
@@ -103,5 +99,23 @@ impl ChallengeTrait for MD5HashCash {
                 false
             }
         }
+    }
+}
+
+
+#[cfg(test)]
+mod tests{
+    use common::structs::{ChallengeTrait, MD5HashCashInput};
+    use crate::md5_hashcash::MD5HashCash;
+
+    #[test]
+    fn test_hashcash() {
+        let input = MD5HashCashInput {
+            complexity: 0,
+            message: "Hello World".to_string()
+        };
+        let hash_cash = MD5HashCash::new(input);
+        let output = hash_cash.solve();
+        assert!(hash_cash.verify(&output));
     }
 }

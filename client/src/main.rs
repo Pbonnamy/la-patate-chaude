@@ -13,8 +13,8 @@ fn main() {
     request::send_message(&mut stream, Message::Hello)*/;
 
     let input = MD5HashCashInput {
-        message: "A red mountain breaks your boring client.".to_string(),
-        complexity: 16
+        message: "Our boring client talks to a red computer.".to_string(),
+        complexity: 9
     };
     let challenge = MD5HashCash::new(input);
 

@@ -1,6 +1,4 @@
 use md5::{Md5, Digest};
-use std::{str};
-use std::fmt::{Error, Write};
 use common::structs::{MD5HashCashInput, MD5HashCashOutput, ChallengeTrait};
 
 pub struct MD5HashCash {
@@ -9,40 +7,14 @@ pub struct MD5HashCash {
     output: MD5HashCashOutput
 }
 
-fn hash(message: &str) -> String{
-
+fn hash(message: String) -> String {
     let mut hasher = Md5::new();
-    hasher.update(message.as_bytes());
-    format!("{:x}", hasher.finalize())
-}
+    hasher.update(message);
+    let result = hasher.finalize();
 
-fn count_bits_zero(string: &str) -> u64{
-    //println!("String: {}", string);
-    let mut count = 0;
-    let decode = hex::decode(string).expect("Erreur au decoding de la chaine");
-    let binary =
-        String::from_utf8_lossy(&decode);
-    for i in binary.chars() {
-        if i == '0' {
-            count += 4;
-        }else if i == '1' {
-            count += 3;
-        }else if i == '2' || i == '3' {
-            count += 2;
-        }else if i == '4' || i == '5' || i == '6' || i == '7' {
-            count += 1;
-        }
-    }
-    count
+    let hashcode = format!("{:032X}", result);
 
-}
-
-fn verify_hash_code(message: &str, seed: u64) -> Result<String, Error>{
-    let seed: u64 = seed;
-    let mut hex_seed = String::new();
-    write!(&mut hex_seed, "{:016x}", seed).expect("Erreur à la conversion du seed en hexa");
-    let hash_code = hash(&(hex_seed.to_uppercase().clone() + &message));
-    return Ok(hash_code.to_uppercase());
+    hashcode
 }
 
 
@@ -62,47 +34,31 @@ impl ChallengeTrait for MD5HashCash {
     }
 
     fn solve(&self) -> Self::Output {
-        let mut seed: u64 = 0;
-        let mut hex_seed = String::new();
-        write!(&mut hex_seed, "{:016x}", seed).expect("Erreur à la conversion du seed en hexa");
-        let mut hex_hash = hex_seed.to_uppercase().clone();
-        let mut hash_code = hash(&(hex_hash + &self.input.message));
-        let mut bits_to_zero = count_bits_zero(&hash_code);
-        let input: &MD5HashCashInput = &self.input;
-        while bits_to_zero < input.complexity as u64 {
+        let input = self.input.message.clone();
+        let mut seed = 0;
+        let mut output: MD5HashCashOutput;
+        
+        loop {
+            let hex_seed = format!("{:016X}", seed);
+
+            let hashcode = hash(hex_seed + &input);
+
+            output = MD5HashCashOutput{ seed, hashcode: hashcode.to_string() };
+
+            if self.verify(&output) {
+                break;
+            }
+
             seed += 1;
-            let mut hex_seed = String::new();
-            write!(&mut hex_seed, "{:016x}", seed).expect("Erreur à la conversion du seed en hexa");
-            hex_hash = hex_seed.to_uppercase().clone();
-            hash_code = hash(&(hex_hash + &self.input.message));
-            bits_to_zero = count_bits_zero(&hash_code);
         }
-        //println!("hash: {}", hash_code);
-        //println!("hash: {}", hex_hash);
-        let output = MD5HashCashOutput{ seed, hashcode: hash_code.to_uppercase() };
-        if self.verify(&output) {
-            return output;
-        } else {
-            panic!("Erreur dans la vérification du hashcash")
-        }
+
+        output
     }
 
     fn verify(&self, output: &Self::Output) -> bool {
-        let seed: u64 = output.seed;
-        return match verify_hash_code(&self.input.message, seed) {
-            Ok(value) => {
-                if value == output.hashcode {
-                    // println!("Ok: {}", value);
-                    true
-                } else {
-                    println!("La valeur ne correspond pas: {}", value);
-                    false
-                }
-            }
-            Err(e) => {
-                println!("Erreur dans la vérification du hashcash: {}", e);
-                false
-            }
-        }
+        let hex_integer = u128::from_str_radix(&output.hashcode, 16).unwrap();
+        let leading_zero = hex_integer.leading_zeros();
+
+        leading_zero >= self.input.complexity
     }
 }

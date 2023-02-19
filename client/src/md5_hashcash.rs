@@ -66,7 +66,7 @@ impl ChallengeTrait for MD5HashCash {
         let mut hex_seed = String::new();
         write!(&mut hex_seed, "{:016x}", seed).expect("Erreur à la conversion du seed en hexa");
         let mut hex_hash = hex_seed.to_uppercase().clone();
-        let mut hash_code = hash(&(hex_seed.to_uppercase().clone() + &self._input.message));
+        let mut hash_code = hash(&(hex_hash + &self.input.message));
         let mut bits_to_zero = count_bits_zero(&hash_code);
         let input: &MD5HashCashInput = &self.input;
         while bits_to_zero < input.complexity as u64 {
@@ -74,7 +74,7 @@ impl ChallengeTrait for MD5HashCash {
             let mut hex_seed = String::new();
             write!(&mut hex_seed, "{:016x}", seed).expect("Erreur à la conversion du seed en hexa");
             hex_hash = hex_seed.to_uppercase().clone();
-            hash_code = hash(&(hex_seed.to_uppercase().clone() + &self._input.message));
+            hash_code = hash(&(hex_hash + &self.input.message));
             bits_to_zero = count_bits_zero(&hash_code);
         }
         //println!("hash: {}", hash_code);

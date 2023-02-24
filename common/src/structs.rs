@@ -19,12 +19,12 @@ pub struct Hello;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Welcome {
-    pub version: u8
+    pub version: u8,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Subscribe {
-    pub name: String
+    pub name: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -40,7 +40,7 @@ pub enum SubscribeError {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-pub struct PublicLeaderBoard (Vec<PublicPlayer>);
+pub struct PublicLeaderBoard(Vec<PublicPlayer>);
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct PublicPlayer {
@@ -49,18 +49,18 @@ pub struct PublicPlayer {
     pub score: i32,
     pub steps: u32,
     pub is_active: bool,
-    pub total_used_time: f64 
+    pub total_used_time: f64,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ChallengeResult {
     pub answer: ChallengeAnswer,
-    pub next_target: String
+    pub next_target: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ChallengeTimeout {
-    pub message: String
+    pub message: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -72,26 +72,20 @@ pub struct RoundSummary {
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ReportedChallengeResult {
     pub name: String,
-    pub value: ChallengeValue
+    pub value: ChallengeValue,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub enum ChallengeValue {
     Unreachable,
     Timeout,
-    BadResult { 
-        used_time: f64, 
-        next_target: String 
-    },
-    Ok { 
-        used_time: f64, 
-        next_target: String 
-    }
+    BadResult { used_time: f64, next_target: String },
+    Ok { used_time: f64, next_target: String },
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct EndOfGame {
-    pub leader_board: PublicLeaderBoard
+    pub leader_board: PublicLeaderBoard,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -134,14 +128,14 @@ pub struct MD5HashCashOutput {
 }
 
 // RecoverSecret
-#[derive(Serialize, Deserialize,Clone, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct RecoverSecretInput {
     pub word_count: usize,
     pub letters: String,
     pub tuple_sizes: Vec<usize>,
 }
 
-#[derive(Serialize, Deserialize,Clone, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct RecoverSecretOutput {
     pub secret_sentence: String,
 }

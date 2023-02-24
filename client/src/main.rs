@@ -1,13 +1,12 @@
-mod recover_secret;
 mod md5_hashcash;
+mod recover_secret;
 
-use std::net::TcpStream;
+use crate::recover_secret::*;
+use common::functs::*;
 use common::request;
-use common::structs::{Message, Subscribe, RecoverSecretInput, ChallengeTrait};
 use common::structs::ChallengeAnswer::RecoverSecret;
-use common::functs::{*};
-use crate::recover_secret::{*};
-
+use common::structs::{ChallengeTrait, Message, RecoverSecretInput, Subscribe};
+use std::net::TcpStream;
 
 fn main() {
     // Connect to server (need to run server first)
@@ -44,7 +43,12 @@ fn main() {
     // let sentence = "Il fait froid" ;
     // let letters = "IfflafIl froid";
     //let is_char_in_sentence = is_char_in_sentence_in_order_of_tuple('z', &"jaz".to_string(), &"je mange".to_string());
-    let tuples = tuples_from_letters(&recover_input.letters, &[6, 8, 4, 6, 4, 7, 8, 9, 6, 9, 8, 7, 5, 7, 6, 6, 9, 5, 4, 5, 4]);
+    let tuples = tuples_from_letters(
+        &recover_input.letters,
+        &[
+            6, 8, 4, 6, 4, 7, 8, 9, 6, 9, 8, 7, 5, 7, 6, 6, 9, 5, 4, 5, 4,
+        ],
+    );
     //let tuples = tuples_from_letters(&recover_input.letters, &[3, 4, 5, 7, 7, 3]);
     //println!("Is char in sentence -> {:?}", is_char_in_sentence) ;
     // let are_in_order : bool = recover_secret::are_tuples_in_good_order(&tuples, sentence);

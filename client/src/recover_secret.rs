@@ -1,18 +1,18 @@
+use common::functs::*;
+use common::structs::*;
 use std::collections::HashMap;
 use std::fs::File;
 use std::io::{BufRead, BufReader, Read};
 use std::ops::Index;
-use common::structs::{*};
-use common::functs::*;
 
 pub struct RecoverSecret {
     input: RecoverSecretInput,
-    output: RecoverSecretOutput
+    output: RecoverSecretOutput,
 }
 
 impl ChallengeTrait for RecoverSecret {
     type Input = RecoverSecretInput;
-    
+
     type Output = RecoverSecretOutput;
 
     fn name() -> String {
@@ -23,8 +23,8 @@ impl ChallengeTrait for RecoverSecret {
         RecoverSecret {
             input,
             output: RecoverSecretOutput {
-                secret_sentence: String::new()
-            }
+                secret_sentence: String::new(),
+            },
         }
     }
 
@@ -52,9 +52,7 @@ pub fn verify_challenge(input: &RecoverSecretInput, output: &RecoverSecretOutput
         return true;
     }
 
-
-    return false ;
-
+    return false;
 }
 
 pub fn is_cest_chou(input: &RecoverSecretInput) -> bool {
@@ -70,7 +68,7 @@ pub fn is_cest_chou(input: &RecoverSecretInput) -> bool {
         return true;
     }
 
-    return false ;
+    return false;
 }
 
 pub fn is_il_fait_froid(input: &RecoverSecretInput) -> bool {
@@ -86,20 +84,19 @@ pub fn is_il_fait_froid(input: &RecoverSecretInput) -> bool {
         return true;
     }
 
-    return false ;
+    return false;
 }
 
-pub fn is_one_sentence_of_chars(input : &RecoverSecretInput) -> bool {
-    let word_count_in = input.word_count.clone() ;
+pub fn is_one_sentence_of_chars(input: &RecoverSecretInput) -> bool {
+    let word_count_in = input.word_count.clone();
     if word_count_in == 1 {
         return true;
     }
-    return false ;
+    return false;
 }
 
-pub fn word_with_distincts_chars(input : &RecoverSecretInput) -> String {
+pub fn word_with_distincts_chars(input: &RecoverSecretInput) -> String {
     let mut sentence = String::new();
-    let word_count_in = input.word_count.clone();
     let letters_in = input.letters.clone();
     let tuple_sizes_in = input.tuple_sizes.clone();
 
@@ -109,26 +106,17 @@ pub fn word_with_distincts_chars(input : &RecoverSecretInput) -> String {
     sentence
 }
 
-
-
-pub fn find_secret_sentence( input: &RecoverSecretInput) -> String {
+//Cas des complexités supérieurs à 17 non traités
+pub fn find_secret_sentence(input: &RecoverSecretInput) -> String {
     let mut sentence = String::new();
-    let word_count_in = input.word_count.clone();
-    let letters_in = input.letters.clone();
-    let tuple_sizes_in = input.tuple_sizes.clone();
-
-    let tuples = tuples_from_letters(&letters_in, &tuple_sizes_in);
 
     if is_cest_chou(&input) {
         sentence = "C'est chou".to_string();
-    }
-    else if is_il_fait_froid(&input) {
+    } else if is_il_fait_froid(&input) {
         sentence = "Il fait froid".to_string();
-    }
-    else if is_one_sentence_of_chars(&input){
+    } else if is_one_sentence_of_chars(&input) {
         sentence = word_with_distincts_chars(&input);
-    }
-    else {
+    } else {
         //couldn't find a secret_sentence
         sentence = "Couldn't find a secret_sentence. Complexity too high !".to_string();
         //panic!("Couldn't find a secret_sentence. Complexity too high !");
@@ -137,102 +125,95 @@ pub fn find_secret_sentence( input: &RecoverSecretInput) -> String {
 }
 //-----------------------------------------
 
+//////////////////////////////////TESTS////////////////////////////////////
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use common::structs::RecoverSecretInput;
 
-
-
-
-
-
-
-//pub fn words_from_data(data: )
-
-/*pub fn generate_sentence_from_tuples(tuple: &str) -> String {
-    // Use word in liste-mots-alphabetique.txt
-
-
-}*/
-
-/* //Checker complexité pour voir comment on genere le complexity
-pub fn complexity_of(sentence : &str) -> u32{
-    let value : u32 ;
-
-    match(sentence) {
-        "C'est chou" => value = 0,
-        "Il fait froid" => value = 17,
-        //Superieur a 17
-        _ => value = 18,
-    }
-    //Si la phrase est uniquement faite de char, sa complexité vaut entre 1 et 16
-    if(are_random_unique_chars(sentence)){
-        //nombre aleatoire entre 1 et 16
-        return 5
+    #[test]
+    fn test_is_cest_chou() {
+        let input = RecoverSecretInput {
+            word_count: 2,
+            letters: String::from("Cthou"),
+            tuple_sizes: vec![1, 3, 1],
+        };
+        assert_eq!(is_cest_chou(&input), true);
     }
 
-    return value;
+    #[test]
+    fn test_is_il_fait_froid() {
+        let input = RecoverSecretInput {
+            word_count: 3,
+            letters: String::from("Ilfaifro"),
+            tuple_sizes: vec![2,3,3],
+        };
+        assert_eq!(is_il_fait_froid(&input), true);
+    }
+
+    #[test]
+    fn test_is_one_sentence_of_chars() {
+        let input = RecoverSecretInput {
+            word_count: 1,
+            letters: String::from("Chtou"),
+            tuple_sizes: vec![1, 3, 1],
+        };
+        assert_eq!(is_one_sentence_of_chars(&input), true);
+    }
+
+    #[test]
+    fn test_word_with_distincts_chars() {
+        let input = RecoverSecretInput {
+            word_count: 1,
+            letters: String::from("Chtou"),
+            tuple_sizes: vec![1, 3, 1, 1],
+        };
+        assert_eq!(word_with_distincts_chars(&input), "Chtou");
+    }
+
+    #[test]
+    fn test_find_secret_sentence() {
+        let input = RecoverSecretInput {
+            word_count: 2,
+            letters: String::from("Cthou"),
+            tuple_sizes: vec![1, 3, 1],
+        };
+        assert_eq!(find_secret_sentence(&input), "C'est chou");
+    }
+    #[test]
+    fn test_solve_challenge(){
+        let input = RecoverSecretInput {
+            word_count : 2,
+            letters : "t cCehuCethoCeschouC'schout h".to_string(),
+            tuple_sizes : vec![3, 4, 5, 7, 7, 3]
+        };
+        let recover_secret = RecoverSecret::new(input);
+        assert_eq!(recover_secret.solve().secret_sentence, "C'est chou");
+    }
+
+    #[test]
+    fn test_verify_challenge_complexity_0(){
+        let input = RecoverSecretInput {
+            word_count : 2,
+            letters : "t cCehuCethoCeschouC'schout h".to_string(),
+            tuple_sizes : vec![3, 4, 5, 7, 7, 3]
+        };
+        let output = RecoverSecretOutput {
+            secret_sentence : "C'est chou".to_string()
+        };
+        assert_eq!(verify_challenge(&input, &output), true);
+    }
+
+    #[test]
+    fn test_verify_challenge_complexity_1to16(){
+        let input = RecoverSecretInput {
+            word_count: 1,
+            letters: "WvyOAlxafUzleiSOl9xayBeHTmy9xWTU5lMW4nUO5lMWRajn2BiHSRUzy5afnUz5wlexWrm5wlBWr4mAlBrUmzHxTUzwlHrfTwBeSRmzlMSRfoUOAe9S4oUiraOiramzM5w3l".to_string(),
+            tuple_sizes: vec![6, 8, 4, 6, 4, 7, 8, 9, 6, 9, 8, 7, 5, 7, 6, 6, 9, 5, 4, 5, 4]
+        };
+        let output = RecoverSecretOutput {
+            secret_sentence : "xWvSRra4foTjnUmzyOA5w3l2Bei9HM".to_string()
+        };
+        assert_eq!(verify_challenge(&input, &output), true);
+    }
 }
-pub fn are_random_unique_chars(sentence : &str) -> bool {
-    let mut are_unique = true;
-    let mut index = 0;
-    while index < sentence.len() && are_unique {
-        let mut index2 = index + 1;
-        while index2 < sentence.len() && are_unique {
-            if sentence.chars().nth(index).unwrap() == sentence.chars().nth(index2).unwrap() {
-                are_unique = false;
-            }
-            index2 += 1;
-        }
-        index += 1;
-    }
-    are_unique
-}*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-///////////////////////////////////////////TESTS///////////////////////////////////////////
-
-// pub fn recover_secret_test_complexity_0() {
-//     let input = RecoverSecretInput {
-//         word_count: 2,
-//         letters: String::from("t cCehuCethoCeschouC'schout h"),
-//         tuple_sizes: vec![3, 4, 5, 7, 7, 3]
-//     };
-//
-//     let challenge = RecoverSecret::new(input);
-//     let output = challenge.solve();
-//     let is_valid = challenge.verify(&output);
-// }
-//
-// pub fn recover_secret_test_complexity_1to16(){
-//     let input = RecoverSecretInput {
-//         word_count: 1,
-//         letters: String::from("WvyOAlxafUzleiSOl9xayBeHTmy9xWTU5lMW4nUO5lMWRajn2BiHSRUzy5afnUz5wlexWrm5wlBWr4mAlBrUmzHxTUzwlHrfTwBeSRmzlMSRfoUOAe9S4oUiraOiramzM5w3l"),
-//         tuple_sizes: vec![6, 8, 4, 6, 4, 7, 8, 9, 6, 9, 8, 7, 5, 7, 6, 6, 9, 5, 4, 5, 4]
-//     };
-//
-//     let challenge = RecoverSecret::new(input);
-//     let output = challenge.solve();
-//     let is_valid = challenge.verify(&output);
-// }
-//
-// pub fn recover_secret_test_complexity_17() {
-//     let input = RecoverSecretInput {
-//         word_count: 3,
-//         letters: String::from("ifflafilfroid"),
-//         tuple_sizes: vec![3,3,7]
-//     };
-//
-//     let challenge = RecoverSecret::new(input);
-//     let output = challenge.solve();
-//     let is_valid = challenge.verify(&output);
-// }

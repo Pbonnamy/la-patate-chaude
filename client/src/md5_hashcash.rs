@@ -1,15 +1,14 @@
-use common::structs::{MD5HashCashInput, MD5HashCashOutput, ChallengeTrait};
-use md5::{Md5, Digest};
+use common::structs::{ChallengeTrait, MD5HashCashInput, MD5HashCashOutput};
+use md5::{Digest, Md5};
 
-struct HashCash{
+struct HashCash {
     input: MD5HashCashInput,
-    output: MD5HashCashOutput
+    output: MD5HashCashOutput,
 }
 
 impl ChallengeTrait for HashCash {
-
     type Input = MD5HashCashInput;
-    
+
     type Output = MD5HashCashOutput;
 
     fn name() -> String {

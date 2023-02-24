@@ -1,7 +1,9 @@
 use std::collections::HashMap;
 use std::fs::File;
 use std::io::{BufRead, BufReader, Read};
+use std::ops::Index;
 use common::structs::{*};
+use common::functs::*;
 
 pub struct RecoverSecret {
     input: RecoverSecretInput,
@@ -35,62 +37,21 @@ impl ChallengeTrait for RecoverSecret {
     }
 }
 
-pub fn tuples_from_letters(letters: &str, tuple_sizes: &[usize] ) -> Vec<String> {
-    let mut tuples = Vec::new();
-    let mut index_letter = 0;
+pub fn verify_challenge(input: &RecoverSecretInput, output: &RecoverSecretOutput) -> bool {
+    let mut tuple_in = tuples_from_letters(&input.letters, &input.tuple_sizes);
 
-    for size in tuple_sizes {
-        let mut tuple = String::new();
-        for iter in 0..*size {
-            tuple.push(letters.chars().nth(index_letter).unwrap());
-            index_letter += 1;
-        }
-        tuples.push(tuple);
+    if input.word_count != nbr_of_words(&output.secret_sentence) {
+        return false;
     }
-    tuples
-}
-//Check si char dans tuple sont en ordre dans la phrase
-pub fn is_tuple_in_good_order(tuple: &str, sentence: &str ) -> bool {
-    let mut index_tuple = 0;
-    let mut index_sentence = 0;
-    let mut is_in_order = true;
+    // Gerer cas ou il y a 1 seul mot avec char distincts. are_tuples in good order ne valide pas tout
 
-    while index_tuple < tuple.len() && index_sentence < sentence.len() {
-        if tuple.chars().nth(index_tuple).unwrap() == sentence.chars().nth(index_sentence).unwrap() {
-            index_tuple += 1;
-        }
-        index_sentence += 1;
-    }
-    //Si ne trouve pas dans reste de la phrase, alors pas dans bon ordre
-    if index_tuple < tuple.len() {
-        is_in_order = false;
-    }
-    is_in_order
-}
-
-pub fn are_tuples_in_good_order(tuples: &[String], sentence: &str ) -> bool {
-    let mut are_in_order = true;
-    for tuple in tuples {
-        if !is_tuple_in_good_order(tuple, sentence) {
-            are_in_order = false;
-        }
-    }
-    are_in_order
-}
-
-pub fn words_from_file_list(file_name: &str) -> Vec<String> {
-    let mut file = File::open(file_name).expect("File not found");
-    let mut reader = BufReader::new(file);
-    let mut contents = vec![];
-
-    //Recupere 1er mot de chaques lignes
-    for line in reader.lines() {
-        let mut l = &line.unwrap();
-        let mut words = l.split_whitespace();
-        contents.push(words.next().unwrap().to_string());
+    if are_tuples_in_good_order(&tuple_in, &output.secret_sentence) {
+        return true;
     }
 
-    return contents ;
+
+    return false ;
+
 }
 
 pub fn is_cest_chou(input: &RecoverSecretInput) -> bool {
@@ -108,6 +69,7 @@ pub fn is_cest_chou(input: &RecoverSecretInput) -> bool {
 
     return false ;
 }
+
 pub fn is_il_fait_froid(input: &RecoverSecretInput) -> bool {
     let sentence_default = "Il fait froid";
     let word_count_in = input.word_count.clone();
@@ -123,16 +85,29 @@ pub fn is_il_fait_froid(input: &RecoverSecretInput) -> bool {
 
     return false ;
 }
+
 pub fn is_one_sentence_of_chars(input : &RecoverSecretInput) -> bool {
-    let word_count_in = input.word_count.clone();
+    let word_count_in = input.word_count.clone() ;
     if word_count_in == 1 {
         return true;
     }
     return false ;
 }
-pub fn sentence_with_distincts_chars(input : &RecoverSecretInput) -> String {
-    "to_do".to_string()
+
+pub fn word_with_distincts_chars(input : &RecoverSecretInput) -> String {
+    let mut sentence = String::new();
+    let word_count_in = input.word_count.clone();
+    let letters_in = input.letters.clone();
+    let tuple_sizes_in = input.tuple_sizes.clone();
+
+    let mut tuples = tuples_from_letters(&letters_in, &tuple_sizes_in);
+    sentence = build_word_of_unique_char(tuples.clone());
+
+    sentence
 }
+
+
+
 
 pub fn secret_sentence( input: &RecoverSecretInput) -> String {
     let mut sentence = String::new();
@@ -149,10 +124,12 @@ pub fn secret_sentence( input: &RecoverSecretInput) -> String {
         sentence = "Il fait froid".to_string();
     }
     else if is_one_sentence_of_chars(&input){
-        sentence = sentence_with_distincts_chars(&input);
+        sentence = word_with_distincts_chars(&input);
     }
     else {
-        sentence = "Nothing".to_string();
+        //couldn't find a secret_sentence
+        sentence = "Couldn't find a secret_sentence. Complexity too high !".to_string();
+        //panic!("Couldn't find a secret_sentence. Complexity too high !");
     }
     return sentence;
 }

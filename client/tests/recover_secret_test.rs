@@ -166,7 +166,7 @@ pub fn is_one_sentence_of_chars(input : &RecoverSecretInput) -> bool {
     }
     return false ;
 }
-pub fn sentence_with_distincts_chars(input : &RecoverSecretInput) -> String {
+pub fn word_with_distincts_chars(input : &RecoverSecretInput) -> String {
     "to_do".to_string()
 }
 
@@ -185,7 +185,7 @@ pub fn secret_sentence( input: &RecoverSecretInput) -> String {
         sentence = "Il fait froid".to_string();
     }
     else if is_one_sentence_of_chars(&input){
-        sentence = sentence_with_distincts_chars(&input);
+        sentence = word_with_distincts_chars(&input);
     }
     else {
         sentence = "Nothing".to_string();

@@ -29,11 +29,15 @@ impl ChallengeTrait for RecoverSecret {
     }
 
     fn solve(&self) -> Self::Output {
-        todo!()
+        let output = RecoverSecretOutput {
+            secret_sentence: find_secret_sentence(&self.input),
+        };
+
+        output
     }
 
     fn verify(&self, answer: &Self::Output) -> bool {
-        todo!()
+        verify_challenge(&self.input, answer)
     }
 }
 
@@ -43,7 +47,6 @@ pub fn verify_challenge(input: &RecoverSecretInput, output: &RecoverSecretOutput
     if input.word_count != nbr_of_words(&output.secret_sentence) {
         return false;
     }
-    // Gerer cas ou il y a 1 seul mot avec char distincts. are_tuples in good order ne valide pas tout
 
     if are_tuples_in_good_order(&tuple_in, &output.secret_sentence) {
         return true;
@@ -108,8 +111,7 @@ pub fn word_with_distincts_chars(input : &RecoverSecretInput) -> String {
 
 
 
-
-pub fn secret_sentence( input: &RecoverSecretInput) -> String {
+pub fn find_secret_sentence( input: &RecoverSecretInput) -> String {
     let mut sentence = String::new();
     let word_count_in = input.word_count.clone();
     let letters_in = input.letters.clone();

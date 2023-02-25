@@ -27,7 +27,7 @@ pub fn tuples_from_letters(letters: &str, tuple_sizes: &[usize]) -> Vec<String> 
 
     while index_letter < letters.len() {
         let mut tuple = String::new();
-        for iter in 0..sizes[0] {
+        for _iter in 0..sizes[0] {
             tuple.push(letters.chars().nth(index_letter).unwrap());
             index_letter += 1;
         }

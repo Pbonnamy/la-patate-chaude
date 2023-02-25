@@ -3,6 +3,7 @@ use common::structs::*;
 
 pub struct RecoverSecret {
     input: RecoverSecretInput,
+    #[allow(dead_code)]
     output: RecoverSecretOutput,
 }
 

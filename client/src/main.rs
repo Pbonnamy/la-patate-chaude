@@ -1,24 +1,28 @@
 mod md5_hashcash;
 mod recover_secret;
-
 use common::request;
 use common::structs::{
     Challenge, ChallengeAnswer, ChallengeResult, ChallengeTrait, Message, PublicLeaderBoard,
     Subscribe,
 };
 use md5_hashcash::MD5HashCash;
-use rand::{distributions::Alphanumeric, Rng};
 use recover_secret::RecoverSecret;
 use std::net::TcpStream;
+use std::env;
 
 fn main() {
-    let mut stream = TcpStream::connect("127.0.0.1:7878").unwrap();
+    let args: Vec<String> = env::args().collect();
+    let address;
 
-    let player_name: String = rand::thread_rng()
-        .sample_iter(&Alphanumeric)
-        .take(7)
-        .map(char::from)
-        .collect();
+    if args.len() != 2 {
+        address = "127.0.0.1:7878";
+    } else {
+        address = &args[1];
+    }
+
+    let mut stream = TcpStream::connect(address).unwrap();
+
+    let player_name: String = "Groupe 5".to_string();
     let mut leaderboard: PublicLeaderBoard = PublicLeaderBoard(Vec::new());
 
     request::send_message(&mut stream, Message::Hello);

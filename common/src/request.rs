@@ -4,7 +4,7 @@ use std::net::TcpStream;
 
 pub fn send_message(stream: &mut TcpStream, msg: Message) {
     let json = serde_json::to_string(&msg).unwrap();
-    println!("\n\x1b[34mDEBUG (Sended) : {:?}\x1b[0m", json);
+    println!("\n\x1b[34mDEBUG (Sended) : {}\x1b[0m", serde_json::to_string_pretty(&msg).unwrap());
     let len = json.len() as u32;
 
     stream.write(&len.to_be_bytes()).unwrap();
@@ -20,7 +20,9 @@ pub fn receive_message(stream: &mut TcpStream) -> Message {
     stream.read_exact(buf.as_mut()).unwrap();
     let res = String::from_utf8_lossy(&buf);
 
-    println!("\n\x1b[31mDEBUG (Received) : {:?}\x1b[0m", res);
+    let json = serde_json::from_str(&res).unwrap();
 
-    return serde_json::from_str(&res).unwrap();
+    println!("\n\x1b[31mDEBUG (Received) : {}\x1b[0m", serde_json::to_string_pretty(&json).unwrap());
+
+    return json;
 }

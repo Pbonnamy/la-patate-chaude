@@ -7,8 +7,8 @@ use common::structs::{
 };
 use md5_hashcash::MD5HashCash;
 use recover_secret::RecoverSecret;
-use std::net::TcpStream;
 use std::env;
+use std::net::TcpStream;
 
 fn main() {
     let args: Vec<String> = env::args().collect();

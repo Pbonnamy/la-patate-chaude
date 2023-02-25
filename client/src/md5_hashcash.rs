@@ -21,7 +21,7 @@ fn hash(message: String) -> String {
 impl ChallengeTrait for MD5HashCash {
 
     type Input = MD5HashCashInput;
-    
+
     type Output = MD5HashCashOutput;
 
     fn name() -> String {

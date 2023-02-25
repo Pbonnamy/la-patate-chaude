@@ -2,7 +2,7 @@ use crate::structs::Message;
 use std::io::prelude::*;
 use std::net::TcpStream;
 
-pub fn send_message (stream: &mut TcpStream, msg: Message) {
+pub fn send_message(stream: &mut TcpStream, msg: Message) {
     let json = serde_json::to_string(&msg).unwrap();
     println!("\n\x1b[34mDEBUG (Sended) : {:?}\x1b[0m", json);
     let len = json.len() as u32;
@@ -11,7 +11,7 @@ pub fn send_message (stream: &mut TcpStream, msg: Message) {
     stream.write(&json.as_bytes()).unwrap();
 }
 
-pub fn receive_message (stream: &mut TcpStream) -> Message {
+pub fn receive_message(stream: &mut TcpStream) -> Message {
     let mut buf_len = [0u8; 4];
     stream.read_exact(buf_len.as_mut()).unwrap();
     let len = u32::from_be_bytes(buf_len);

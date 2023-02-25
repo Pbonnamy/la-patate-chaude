@@ -1,10 +1,10 @@
-use md5::{Md5, Digest};
-use common::structs::{MD5HashCashInput, MD5HashCashOutput, ChallengeTrait};
+use common::structs::{ChallengeTrait, MD5HashCashInput, MD5HashCashOutput};
+use md5::{Digest, Md5};
 
 pub struct MD5HashCash {
     input: MD5HashCashInput,
     #[allow(dead_code)]
-    output: MD5HashCashOutput
+    output: MD5HashCashOutput,
 }
 
 fn hash(message: String) -> String {
@@ -17,9 +17,7 @@ fn hash(message: String) -> String {
     hashcode
 }
 
-
 impl ChallengeTrait for MD5HashCash {
-
     type Input = MD5HashCashInput;
 
     type Output = MD5HashCashOutput;
@@ -29,20 +27,29 @@ impl ChallengeTrait for MD5HashCash {
     }
 
     fn new(input: Self::Input) -> Self {
-        MD5HashCash{ input, output: MD5HashCashOutput{ seed: 0, hashcode: "".to_string() } }
+        MD5HashCash {
+            input,
+            output: MD5HashCashOutput {
+                seed: 0,
+                hashcode: "".to_string(),
+            },
+        }
     }
 
     fn solve(&self) -> Self::Output {
         let input = self.input.message.clone();
         let mut seed = 0;
         let mut output: MD5HashCashOutput;
-        
+
         loop {
             let hex_seed = format!("{:016X}", seed);
 
             let hashcode = hash(hex_seed + &input);
 
-            output = MD5HashCashOutput{ seed, hashcode: hashcode.to_string() };
+            output = MD5HashCashOutput {
+                seed,
+                hashcode: hashcode.to_string(),
+            };
 
             if self.verify(&output) {
                 break;
@@ -62,17 +69,16 @@ impl ChallengeTrait for MD5HashCash {
     }
 }
 
-
 #[cfg(test)]
-mod tests{
-    use common::structs::{ChallengeTrait, MD5HashCashInput};
+mod tests {
     use crate::md5_hashcash::MD5HashCash;
+    use common::structs::{ChallengeTrait, MD5HashCashInput};
 
     #[test]
     fn test_hashcash() {
         let input = MD5HashCashInput {
             complexity: 0,
-            message: "Hello World".to_string()
+            message: "Hello World".to_string(),
         };
         let hash_cash = MD5HashCash::new(input);
         let output = hash_cash.solve();

@@ -141,7 +141,7 @@ mod tests {
         let input = RecoverSecretInput {
             word_count: 3,
             letters: String::from("Ilfaifro"),
-            tuple_sizes: vec![2,3,3],
+            tuple_sizes: vec![2, 3, 3],
         };
         assert_eq!(is_il_fait_froid(&input), true);
     }
@@ -176,38 +176,38 @@ mod tests {
         assert_eq!(find_secret_sentence(&input), "C'est chou");
     }
     #[test]
-    fn test_solve_challenge(){
+    fn test_solve_challenge() {
         let input = RecoverSecretInput {
-            word_count : 2,
-            letters : "t cCehuCethoCeschouC'schout h".to_string(),
-            tuple_sizes : vec![3, 4, 5, 7, 7, 3]
+            word_count: 2,
+            letters: "t cCehuCethoCeschouC'schout h".to_string(),
+            tuple_sizes: vec![3, 4, 5, 7, 7, 3],
         };
         let recover_secret = RecoverSecret::new(input);
         assert_eq!(recover_secret.solve().secret_sentence, "C'est chou");
     }
 
     #[test]
-    fn test_verify_challenge_complexity_0(){
+    fn test_verify_challenge_complexity_0() {
         let input = RecoverSecretInput {
-            word_count : 2,
-            letters : "t cCehuCethoCeschouC'schout h".to_string(),
-            tuple_sizes : vec![3, 4, 5, 7, 7, 3]
+            word_count: 2,
+            letters: "t cCehuCethoCeschouC'schout h".to_string(),
+            tuple_sizes: vec![3, 4, 5, 7, 7, 3],
         };
         let output = RecoverSecretOutput {
-            secret_sentence : "C'est chou".to_string()
+            secret_sentence: "C'est chou".to_string(),
         };
         assert_eq!(verify_challenge(&input, &output), true);
     }
 
     #[test]
-    fn test_verify_challenge_complexity_1to16(){
+    fn test_verify_challenge_complexity_1to16() {
         let input = RecoverSecretInput {
             word_count: 1,
             letters: "WvyOAlxafUzleiSOl9xayBeHTmy9xWTU5lMW4nUO5lMWRajn2BiHSRUzy5afnUz5wlexWrm5wlBWr4mAlBrUmzHxTUzwlHrfTwBeSRmzlMSRfoUOAe9S4oUiraOiramzM5w3l".to_string(),
             tuple_sizes: vec![6, 8, 4, 6, 4, 7, 8, 9, 6, 9, 8, 7, 5, 7, 6, 6, 9, 5, 4, 5, 4]
         };
         let output = RecoverSecretOutput {
-            secret_sentence : "xWvSRra4foTjnUmzyOA5w3l2Bei9HM".to_string()
+            secret_sentence: "xWvSRra4foTjnUmzyOA5w3l2Bei9HM".to_string(),
         };
         assert_eq!(verify_challenge(&input, &output), true);
     }

@@ -9,4 +9,3 @@ edition = "2021"
 common = { path = "../common" }
 md-5 = "0.10.5"
 rand = "0.8.3"
-hex = "0.4.3"

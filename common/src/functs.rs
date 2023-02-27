@@ -3,6 +3,9 @@ use std::io::{BufRead, BufReader};
 
 //--------------------------FILE FUNCTIONS----------------------------
 
+///Return a vector of words from a file. Speically liste-mots-alpha.txt from data folder
+/// Exemple: "data/liste-mots-alpha.txt" return ["a", "abaisser", "abandon", ...]
+/// Note: The file must be in the same folder as the executable
 pub fn words_from_file_list(file_name: &str) -> Vec<String> {
     let file = File::open(file_name).expect("File not found");
     let reader = BufReader::new(file);
@@ -20,6 +23,15 @@ pub fn words_from_file_list(file_name: &str) -> Vec<String> {
 
 //-------------------------STRING FUNCTIONS--------------------------
 
+///Return a vector of tuples from a string. The size of the tuples are in the tuple_sizes vector
+/// # Example
+/// ```
+/// use common::functs::tuples_from_letters;
+/// let letters = "abracadabra";
+/// let tuple_sizes = [2, 2, 2, 2, 2, 1];
+/// let tuples = tuples_from_letters(letters, &tuple_sizes);
+/// assert_eq!(tuples, ["ab", "ra", "ca", "da", "br", "a"]);
+/// ```
 pub fn tuples_from_letters(letters: &str, tuple_sizes: &[usize]) -> Vec<String> {
     let mut tuples = Vec::new();
     let mut index_letter = 0;
@@ -37,7 +49,15 @@ pub fn tuples_from_letters(letters: &str, tuple_sizes: &[usize]) -> Vec<String> 
     tuples
 }
 
-//Check si char dans tuple sont en ordre dans la phrase
+/// Check if tuple is in good order in sentence. Return true if yes
+/// # Example
+/// ```
+/// use common::functs::is_tuple_in_good_order;
+/// let tuple = "abdb";
+/// let sentence = "abracadabra";
+/// let is_in_order = is_tuple_in_good_order(tuple, sentence);
+/// assert_eq!(is_in_order, true);
+/// ```
 pub fn is_tuple_in_good_order(tuple: &str, sentence: &str) -> bool {
     let mut index_tuple = 0;
     let mut index_sentence = 0;
@@ -57,6 +77,15 @@ pub fn is_tuple_in_good_order(tuple: &str, sentence: &str) -> bool {
     is_in_order
 }
 
+/// Check if all tuples are in good order in sentence. Return true if yes
+/// # Example
+/// ```
+/// use common::functs::are_tuples_in_good_order;
+/// let tuples = ["abdb".to_string(), "brab".to_string(), "aca".to_string()];
+/// let sentence = "abracadabra";
+/// let are_in_order = are_tuples_in_good_order(&tuples, sentence);
+/// assert_eq!(are_in_order, true);
+/// ```
 pub fn are_tuples_in_good_order(tuples: &[String], sentence: &str) -> bool {
     let mut are_in_order = true;
     for tuple in tuples {
@@ -67,11 +96,28 @@ pub fn are_tuples_in_good_order(tuples: &[String], sentence: &str) -> bool {
     are_in_order
 }
 
+/// Return the number of words in a sentence
+/// # Example
+/// ```
+/// use common::functs::nbr_of_words;
+/// let sentence = "abraca dab ra".to_string();
+/// let nbr_words = nbr_of_words(&sentence);
+/// assert_eq!(nbr_words, 3);
+/// ```
+
 pub fn nbr_of_words(sentence: &String) -> usize {
     let nbr_words = sentence.split_whitespace().count();
     nbr_words
 }
 
+/// Return the number of words in a sentence
+/// # Example
+/// ```
+/// use common::functs::nbr_of_words;
+/// let sentence = "abraca dab ra".to_string();
+/// let nbr_words = nbr_of_words(&sentence);
+/// assert_eq!(nbr_words, 3);
+/// ```
 pub fn is_char_in_sentence_in_order_of_tuple(ch: char, tuple: &String, sentence: &String) -> bool {
     // Si char pas dans tuple, alors erreur
     if !tuple.contains(ch) {
@@ -103,6 +149,7 @@ pub fn is_char_in_sentence_in_order_of_tuple(ch: char, tuple: &String, sentence:
     return false;
 }
 
+/// Build a word from a vector of tuples with unique characters
 pub fn build_word_of_unique_char(tuples: Vec<String>) -> String {
     let mut result = String::new();
     let tup = tuples.clone();
@@ -193,6 +240,13 @@ mod tests {
     }
 
     #[test]
+    fn test_is_tuple_in_bad_order() {
+        let tuple = "abc".to_string();
+        let sentence = "bacrfsf".to_string();
+        assert_eq!(is_tuple_in_good_order(&tuple, &sentence), false);
+    }
+
+    #[test]
     fn test_tuples_from_letters() {
         let letters = "t cCehuCethoCeschouC'schout h".to_string();
         let tuples = tuples_from_letters(&letters, &[3, 4, 5, 7, 7, 3]);
@@ -221,5 +275,69 @@ mod tests {
         let letters = "je fonctionne correctement".to_string();
         let nbr_of_words = nbr_of_words(&letters);
         assert_eq!(nbr_of_words, 3);
+    }
+
+    #[test]
+    fn test_nbr_of_word_empty() {
+        let letters = "".to_string();
+        let nbr_of_words = nbr_of_words(&letters);
+        assert_eq!(nbr_of_words, 0);
+    }
+
+    #[test]
+    fn test_nbr_of_word_multiple_space() {
+        let letters = "je   fonctionne correctement".to_string();
+        let nbr_of_words = nbr_of_words(&letters);
+        assert_eq!(nbr_of_words, 3);
+    }
+
+    #[test]
+    fn test_nbr_of_word_space_at_end() {
+        let letters = "je fonctionne correctement ".to_string();
+        let nbr_of_words = nbr_of_words(&letters);
+        assert_eq!(nbr_of_words, 3);
+    }
+
+    #[test]
+    fn test_nbr_of_word_space_at_beginning() {
+        let letters = " je fonctionne correctement".to_string();
+        let nbr_of_words = nbr_of_words(&letters);
+        assert_eq!(nbr_of_words, 3);
+    }
+
+    #[test]
+    fn test_nbr_of_word_space_at_beginning_and_end() {
+        let letters = " je fonctionne correctement ".to_string();
+        let nbr_of_words = nbr_of_words(&letters);
+        assert_eq!(nbr_of_words, 3);
+    }
+
+    #[test]
+    fn test_nbr_of_word_space_at_beginning_and_end_and_multiple_space() {
+        let letters = " je fonctionne correctement ".to_string();
+        let nbr_of_words = nbr_of_words(&letters);
+        assert_eq!(nbr_of_words, 3);
+    }
+
+    #[test]
+    fn test_nbr_of_word_space_at_beginning_and_end_and_multiple_space_and_uppercase() {
+        let letters = " Je fonctionne correctement ".to_string();
+        let nbr_of_words = nbr_of_words(&letters);
+        assert_eq!(nbr_of_words, 3);
+    }
+
+    #[test]
+    fn test_nbr_of_word_space_at_beginning_and_end_and_multiple_space_and_uppercase_and_special_char(
+    ) {
+        let letters = " Je fonctionne correctement !".to_string();
+        let nbr_of_words = nbr_of_words(&letters);
+        assert_eq!(nbr_of_words, 4);
+    }
+
+    #[test]
+    fn test_nbr_of_word_multiple_following_space() {
+        let letters = " Je fonctionne correctement !      ".to_string();
+        let nbr_of_words = nbr_of_words(&letters);
+        assert_eq!(nbr_of_words, 4);
     }
 }

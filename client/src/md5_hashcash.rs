@@ -1,3 +1,5 @@
+//! Module that contains the implementation of the MD5HashCash challenge
+
 use common::structs::{ChallengeTrait, MD5HashCashInput, MD5HashCashOutput};
 use md5::{Digest, Md5};
 

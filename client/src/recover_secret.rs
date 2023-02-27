@@ -1,3 +1,4 @@
+//! Module that contains the implementation of the RecoverSecret challenge
 use common::functs::*;
 use common::structs::*;
 

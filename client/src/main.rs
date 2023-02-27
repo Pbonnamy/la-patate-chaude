@@ -10,6 +10,7 @@ use recover_secret::RecoverSecret;
 use std::env;
 use std::net::TcpStream;
 
+/// It connects to the server and handle the responses
 fn main() {
     let args: Vec<String> = env::args().collect();
     let address;
@@ -20,6 +21,7 @@ fn main() {
         address = &args[1];
     }
 
+    // Connect to the server
     let mut stream = TcpStream::connect(address).unwrap();
 
     let player_name: String = "Groupe 5".to_string();
@@ -30,6 +32,7 @@ fn main() {
     loop {
         let response = request::receive_message(&mut stream);
 
+        // Pattern matching on the response
         match response {
             Message::Welcome(..) => {
                 let subscribe = Subscribe {
@@ -44,6 +47,7 @@ fn main() {
             Message::PublicLeaderBoard(input) => {
                 leaderboard = input;
             }
+            //Pattern matching on the challenge
             Message::Challenge(challenge) => match challenge {
                 Challenge::MD5HashCash(input) => {
                     let challenge = MD5HashCash::new(input);
@@ -89,12 +93,15 @@ fn main() {
     }
 }
 
+/// It returns the name of a random player (which is not the actual player)
 fn get_next_target(leaderboard: &PublicLeaderBoard, player_name: &String) -> String {
+    // Get a random player
     let random_player = leaderboard
         .0
         .iter()
         .find(|player| player.name != *player_name);
 
+    // If no player found return an empty string
     return match random_player {
         Some(player) => player.name.clone(),
         None => return String::new(),

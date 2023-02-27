@@ -43,6 +43,12 @@ impl ChallengeTrait for MD5HashCash {
     /// ```
     type Output = MD5HashCashOutput;
 
+    /// Function that returns the name of the challenge
+    /// # Exemple
+    /// ```
+    /// let challenge = MD5HashCash::new(input);
+    /// let name = challenge.name();
+    /// ```
     fn name() -> String {
         String::from("HashCash")
     }

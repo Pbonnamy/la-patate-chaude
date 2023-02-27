@@ -11,6 +11,12 @@ use std::env;
 use std::net::TcpStream;
 
 /// It connects to the server and handle the responses
+/// # Arguments
+/// * `ip:port` - The ip and port of the server
+/// # Example
+/// ```
+/// cargo run 127.0.0.1:7878
+/// ```
 fn main() {
     let args: Vec<String> = env::args().collect();
     let address;
@@ -94,6 +100,15 @@ fn main() {
 }
 
 /// It returns the name of a random player (which is not the actual player)
+/// # Arguments
+/// * `leaderboard` - A PublicLeaderBoard struct
+/// * `player_name` - A string containing the name of the actual player
+/// # Example
+/// ```
+/// let player_name = get_next_target(&leaderboard, &player_name);
+/// ```
+/// # Output
+/// A string containing the name of the next target
 fn get_next_target(leaderboard: &PublicLeaderBoard, player_name: &String) -> String {
     // Get a random player
     let random_player = leaderboard

@@ -2,26 +2,25 @@ use common::structs::{ChallengeTrait, MD5HashCashInput, MD5HashCashOutput};
 use md5::{Digest, Md5};
 
 /// A challenge that requires the solver to find a seed that produces a hashcode with a given number of leading zeros.
-/// Le challenge consiste à trouver un seed qui produit un hashcode avec un nombre donné de zéros en tête.
-/// Las structure est définit de la manière suivante
+/// The structure is defined as follows
 pub struct MD5HashCash {
-    /// L'input du challenge est de type MD5HashCashInput
+    /// The challenge input is of type MD5HashCashInput
     input: MD5HashCashInput,
     #[allow(dead_code)]
-    /// L'output du challenge est de type MD5HashCashOutput
+    /// The output of the challenge is of type MD5HashCashOutput
     output: MD5HashCashOutput,
 }
 
-/// Fonction qui calcule le hashcode d'un message
-/// La fonction prend en paramètre un message de type String
+/// Function that calculates the hashcode of a message
+/// The function takes as parameter a message of type String
 /// # Arguments
-/// * `message` - Le message à hasher
+/// * `message` - The message to hash
 /// # Example
 /// ```
 /// let hashcode = hash("0000000000000131Our boring client talks to a red computer.");
 /// ```
 /// # Output
-/// Un hashcode de type String qui est le résultat du hashage du message en hexadécimal
+/// A hashcode of type String which is the result of the hash of the message in hexadecimal
 fn hash(message: String) -> String {
     let mut hasher = Md5::new();
     hasher.update(message);
@@ -32,12 +31,12 @@ fn hash(message: String) -> String {
     hashcode
 }
 
-/// Challenge Md5HashCash qui implémente le trait ChallengeTrait
+/// Challenge Md5HashCash which implements the ChallengeTrait
 impl ChallengeTrait for MD5HashCash {
-    /// Le type d'input est MD5HashCashInput
+    /// The input type is MD5HashCashInput
     type Input = MD5HashCashInput;
 
-    /// Le type d'output est MD5HashCashOutput
+    /// The output type is MD5HashCashOutput
     /// # Exemple
     /// ```
     /// fn solve(&self) -> Self::Output{ return self.output;}
@@ -48,9 +47,9 @@ impl ChallengeTrait for MD5HashCash {
         String::from("HashCash")
     }
 
-    /// Fonction qui retourne une nouvelle instance de MD5HashCash
+    /// Function that returns a new instance of MD5HashCash
     /// # Arguments
-    /// * `input` - Le message à hasher + la complexité du challenge de type MD5HashCashInput
+    /// * `input` - The message to be hashed + the complexity of the MD5HashCashInput challenge
     /// # Exemple
     /// ```
     /// use md5_hashcash::MD5HashCash;
@@ -66,7 +65,7 @@ impl ChallengeTrait for MD5HashCash {
         }
     }
 
-    /// Fonction qui résout le challenge
+    /// Function that solves the challenge
     /// # Exemple
     /// ```
     /// use md5_hashcash::MD5HashCash;
@@ -74,7 +73,7 @@ impl ChallengeTrait for MD5HashCash {
     /// let output = challenge.solve();
     /// ```
     /// # Output
-    /// Le seed qui a permis de trouver le hashcode avec la complexité demandée de type MD5HashCashOutput
+    /// The seed that allowed to find the hashcode with the requested complexity of type MD5HashCashOutput
     fn solve(&self) -> Self::Output {
         let input = self.input.message.clone();
         let mut seed = 0;
@@ -100,9 +99,9 @@ impl ChallengeTrait for MD5HashCash {
         output
     }
 
-    /// Fonction qui vérifie si le hashcode trouvé est valide
+    /// Function that checks if the found hashcode is valid
     /// # Arguments
-    /// * `output` - Le hashcode trouvé de type MD5HashCashOutput
+    /// * `output` - The hashcode found of type MD5HashCashOutput
     /// # Exemple
     /// ```
     /// use md5_hashcash::MD5HashCash;
@@ -111,7 +110,7 @@ impl ChallengeTrait for MD5HashCash {
     /// let is_valid = challenge.verify(&output);
     /// ```
     /// # Output
-    /// True si le hashcode trouvé est valide, False sinon
+    /// True if the hashcode found is valid, False otherwise
     fn verify(&self, output: &Self::Output) -> bool {
         let hex_integer = u128::from_str_radix(&output.hashcode, 16).unwrap();
         let leading_zero = hex_integer.leading_zeros();

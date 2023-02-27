@@ -2,6 +2,16 @@ use crate::structs::Message;
 use std::io::prelude::*;
 use std::net::TcpStream;
 
+/// It sends a message to the server and use serde_json to serialize the message
+/// # Arguments
+/// * `stream` - A TcpStream containing the connection to the server
+/// * `msg` - A Message struct containing the message to send
+/// # Example
+/// ```
+/// let mut stream = TcpStream::connect(address).unwrap();
+/// let result = Message::Challenge(Challenge::MD5HashCash(input));
+/// request::send_message(&mut stream, result);
+/// ```
 pub fn send_message(stream: &mut TcpStream, msg: Message) {
     let json = serde_json::to_string(&msg).unwrap();
     println!(
@@ -14,6 +24,16 @@ pub fn send_message(stream: &mut TcpStream, msg: Message) {
     stream.write(&json.as_bytes()).unwrap();
 }
 
+/// It receives a message from the server and use serde_json to deserialize the message
+/// # Arguments
+/// * `stream` - A TcpStream containing the connection to the server
+/// # Example
+/// ```
+/// let mut stream = TcpStream::connect(address).unwrap();
+/// let result = request::receive_message(&mut stream);
+/// ```
+/// # Output
+/// A Message struct containing the message received
 pub fn receive_message(stream: &mut TcpStream) -> Message {
     let mut buf_len = [0u8; 4];
     stream.read_exact(buf_len.as_mut()).unwrap();

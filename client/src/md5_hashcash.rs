@@ -137,24 +137,23 @@ mod tests {
     }
 
     #[test]
-    fn test_hex_seed(){
+    fn test_hex_seed() {
         let seed = 789;
         let hex_seed = format!("{:016X}", seed);
         assert_eq!(hex_seed, "0000000000000315");
     }
 
     #[test]
-    fn test_hash(){
+    fn test_hash() {
         let message = "Hello World".to_string();
         let hashcode = super::hash(message);
         assert_eq!(hashcode, "B10A8DB164E0754105B7A99BE72E3FE5");
     }
 
     #[test]
-    fn test_count_bits_zero(){
+    fn test_count_bits_zero() {
         let hex_integer = u128::from_str_radix("ED076287532E86365E841E92BFC50D8C", 16).unwrap();
         let leading_zero = hex_integer.leading_zeros();
         assert_eq!(leading_zero, 0);
     }
-
 }

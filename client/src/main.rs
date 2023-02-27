@@ -38,6 +38,7 @@ fn main() {
                 request::send_message(&mut stream, Message::Subscribe(subscribe));
             }
             Message::SubscribeResult(..) => {
+                println!(" \n\x1b[32mSucessfully subscribed\x1b[0m");
                 continue;
             }
             Message::PublicLeaderBoard(input) => {
@@ -70,12 +71,15 @@ fn main() {
                 }
             },
             Message::ChallengeTimeout(..) => {
+                println!(" \n\x1b[32mTimed out\x1b[0m");
                 break;
             }
             Message::RoundSummary(..) => {
+                println!(" \n\x1b[32mEnd of round\x1b[0m");
                 continue;
             }
             Message::EndOfGame(..) => {
+                println!(" \n\x1b[32mEnd of game\x1b[0m");
                 break;
             }
             _ => {
@@ -95,4 +99,64 @@ fn get_next_target(leaderboard: &PublicLeaderBoard, player_name: &String) -> Str
         Some(player) => player.name.clone(),
         None => return String::new(),
     };
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use common::structs::PublicPlayer;
+
+    #[test]
+    fn test_get_next_target() {
+        let leaderboard = PublicLeaderBoard(vec![
+            PublicPlayer {
+                name: "Player 1".to_string(),
+                stream_id: "stream_id".to_string(),
+                score: 0,
+                steps: 0,
+                is_active: false,
+                total_used_time: 0.0,
+            },
+            PublicPlayer {
+                name: "Player 2".to_string(),
+                stream_id: "stream_id".to_string(),
+                score: 0,
+                steps: 0,
+                is_active: false,
+                total_used_time: 0.0,
+            },
+            PublicPlayer {
+                name: "Player 3".to_string(),
+                stream_id: "stream_id".to_string(),
+                score: 0,
+                steps: 0,
+                is_active: false,
+                total_used_time: 0.0,
+            },
+        ]);
+
+        let player_name = "Player 1".to_string();
+
+        let next_target = get_next_target(&leaderboard, &player_name);
+
+        assert_eq!(next_target, "Player 2");
+    }
+
+    #[test]
+    fn test_get_next_target_with_one_player() {
+        let leaderboard = PublicLeaderBoard(vec![PublicPlayer {
+            name: "Player 1".to_string(),
+            stream_id: "stream_id".to_string(),
+            score: 0,
+            steps: 0,
+            is_active: false,
+            total_used_time: 0.0,
+        }]);
+
+        let player_name = "Player 1".to_string();
+
+        let next_target = get_next_target(&leaderboard, &player_name);
+
+        assert_eq!(next_target, "");
+    }
 }

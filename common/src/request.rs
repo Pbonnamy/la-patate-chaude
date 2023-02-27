@@ -7,7 +7,7 @@ use std::net::TcpStream;
 /// * `stream` - A TcpStream containing the connection to the server
 /// * `msg` - A Message struct containing the message to send
 /// # Example
-/// ```
+/// ```ignore
 /// let mut stream = TcpStream::connect(address).unwrap();
 /// let result = Message::Challenge(Challenge::MD5HashCash(input));
 /// request::send_message(&mut stream, result);
@@ -28,7 +28,7 @@ pub fn send_message(stream: &mut TcpStream, msg: Message) {
 /// # Arguments
 /// * `stream` - A TcpStream containing the connection to the server
 /// # Example
-/// ```
+/// ```ignore
 /// let mut stream = TcpStream::connect(address).unwrap();
 /// let result = request::receive_message(&mut stream);
 /// ```

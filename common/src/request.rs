@@ -46,7 +46,7 @@ pub fn receive_message(stream: &mut TcpStream) -> Message {
     let json = serde_json::from_str(&res).unwrap();
 
     println!(
-        "\n\x1b[31mDEBUG (Received) : {}\x1b[0m",
+        "\n\x1b[35mDEBUG (Received) : {}\x1b[0m",
         serde_json::to_string_pretty(&json).unwrap()
     );
 
